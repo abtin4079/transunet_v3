@@ -41,12 +41,15 @@ class EpochCallback:
         self.optimizer = optimizer
 
     def __save_model(self):
+        save_directory = '/content/model1'  # Update this path to where you want to save your models
+        if not os.path.exists(save_directory):
+            os.makedirs(save_directory)
         for m_name, m, opt in zip(self.model_name, self.model, self.optimizer):
+            full_path = os.path.join(save_directory, m_name)
             torch.save({'model_state_dict': m.state_dict(),
                         'optimizer_state_dict': opt.state_dict()},
-                       m_name)
-
-            print(f'Model saved to {m_name}')
+                    full_path)
+            print(f'Model saved to {full_path}')
 
     def epoch_end(self, epoch_num, hash):
         epoch_end_str = f'Epoch {epoch_num}/{self.total_epoch_num} - '
