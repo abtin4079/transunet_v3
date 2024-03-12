@@ -73,7 +73,7 @@ if __name__ == '__main__':
                                     T.Normalize(),
                                     T.ToTensor()])
 
-    md = DentalDataset('/home/kara/Downloads/UFBA_UESC_DENTAL_IMAGES_DEEP/dataset_and_code/test/set/train',
+    md = DentalDataset('F:/UNIVERCITY/sharifian/t1/datasets/train',
                        transform)
 
     for sample in md:
