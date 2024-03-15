@@ -11,7 +11,7 @@ from utils.utils import EpochCallback
 from config import cfg
 
 from train_transunet import TransUNetSeg
-
+import matplotlib.pyplot as plt
 
 class TrainTestPipe:
     def __init__(self, train_path, test_path, model_path, device):
@@ -53,6 +53,8 @@ class TrainTestPipe:
         return total_loss
 
     def train(self):
+        train_loss_plot = []
+        test_loss_plot = []
         callback = EpochCallback(self.model_path, cfg.epoch,
                                  self.transunet.model, self.transunet.optimizer, 'test_loss', cfg.patience)
 
@@ -66,5 +68,25 @@ class TrainTestPipe:
                                {'loss': train_loss / len(self.train_loader),
                                 'test_loss': test_loss / len(self.test_loader)})
 
+            train_loss_plot.append(train_loss / len(self.train_loader))
+            test_loss_plot.append(test_loss / len(self.test_loader))
+            plt.plot(train_loss_plot, label=' Loss')
+            plt.plot(test_loss_plot, label='test Loss')
+            plt.xlabel('Epochs')
+            plt.ylabel('Loss')
+            plt.legend()    
+            plt.savefig('/content/drive/MyDrive/datasets/plot0/results.png')       
+
+
             if callback.end_training:
                 break
+
+        #plot the train loss and test loss
+        plt.plot(train_loss_plot, label=' Loss')
+        plt.plot(test_loss_plot, label='test Loss')
+        plt.xlabel('Epochs')
+        plt.ylabel('Loss')
+        plt.legend()
+        plt.show()
+
+
