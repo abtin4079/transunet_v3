@@ -2,7 +2,7 @@ from easydict import EasyDict
 
 cfg = EasyDict()
 cfg.batch_size = 16
-cfg.epoch = 2
+cfg.epoch = 100
 cfg.learning_rate = 1e-2
 cfg.momentum = 0.9
 cfg.weight_decay = 1e-4
