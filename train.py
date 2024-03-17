@@ -75,7 +75,7 @@ class TrainTestPipe:
             plt.xlabel('Epochs')
             plt.ylabel('Loss')
             plt.legend()    
-            plt.savefig('/content/drive/MyDrive/datasets/plot0/results.png')       
+            plt.savefig('/content/drive/MyDrive/all/plot3/results.png')       
 
 
             if callback.end_training:
