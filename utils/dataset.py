@@ -24,7 +24,7 @@ class DentalDataset(Dataset):
         for p in os.listdir(img_folder):
             name = p.split('.')[0]
 
-            self.img_paths.append(os.path.join(img_folder, name + '.png'))
+            self.img_paths.append(os.path.join(img_folder, name + '.npy'))
             self.mask_paths.append(os.path.join(mask_folder, name + '.png'))
 
     def __getitem__(self, idx):
