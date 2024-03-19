@@ -53,8 +53,12 @@ class TrainTestPipe:
         return total_loss
 
     def train(self):
+        # Load pre-trained model weights before starting training
+        self.load_model(self.model_path)  # Ensure self.model_path points to the checkpoint file
+        
         train_loss_plot = []
         test_loss_plot = []
+        
         callback = EpochCallback(self.model_path, cfg.epoch,
                                  self.transunet.model, self.transunet.optimizer, 'test_loss', cfg.patience)
 
@@ -70,7 +74,7 @@ class TrainTestPipe:
 
             train_loss_plot.append(train_loss / len(self.train_loader))
             test_loss_plot.append(test_loss / len(self.test_loader))
-            
+
             # Plot the training and testing losses
             plt.figure()  # Create a new figure to avoid overlap
             plt.plot(train_loss_plot, label='Train Loss')
