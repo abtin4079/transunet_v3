@@ -70,12 +70,18 @@ class TrainTestPipe:
 
             train_loss_plot.append(train_loss / len(self.train_loader))
             test_loss_plot.append(test_loss / len(self.test_loader))
-            plt.plot(train_loss_plot, label=' Loss')
-            plt.plot(test_loss_plot, label='test Loss')
+            
+            # Plot the training and testing losses
+            plt.figure()  # Create a new figure to avoid overlap
+            plt.plot(train_loss_plot, label='Train Loss')
+            plt.plot(test_loss_plot, label='Test Loss')
             plt.xlabel('Epochs')
             plt.ylabel('Loss')
-            plt.legend()    
-            plt.savefig('/content/drive/MyDrive/all/plot3/result/plots.png')       
+            plt.legend()
+    
+            # Save the plot to the same file, overwriting the previous plot
+            plt.savefig('/content/drive/MyDrive/dataset_v1/plot/plot3.png')
+            plt.close()  # Close the figure to free memory      
 
 
             if callback.end_training:
