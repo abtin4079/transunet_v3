@@ -35,7 +35,7 @@ class DentalDataset(Dataset):
         mask = self.mask_paths[idx]
 
         img = np.load(img)
-        img = cv2.imread(img)
+        #img = cv2.imread(img)
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         img = cv2.resize(img, (self.output_size, self.output_size))
 
