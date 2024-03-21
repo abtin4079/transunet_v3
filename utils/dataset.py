@@ -24,7 +24,7 @@ class DentalDataset(Dataset):
         for p in os.listdir(img_folder):
             name = p.split('.')[0]
 
-            self.img_paths.append(os.path.join(img_folder, name + '.npy'))
+            self.img_paths.append(os.path.join(img_folder, name + '.png'))
             self.mask_paths.append(os.path.join(mask_folder, name + '.png'))
 
     def __getitem__(self, idx):
@@ -34,8 +34,8 @@ class DentalDataset(Dataset):
         img = self.img_paths[idx]
         mask = self.mask_paths[idx]
 
-        img = np.load(img)
-        #img = cv2.imread(img)
+        #img = np.load(img)
+        img = cv2.imread(img)
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         img = cv2.resize(img, (self.output_size, self.output_size))
 
@@ -66,22 +66,14 @@ class DentalDataset(Dataset):
 
 if __name__ == '__main__':
     import torchvision.transforms as transforms
-    from utils import transforms as T
+    import transforms as T
+    transform = transforms.Compose([T.RandomAugmentation(2)])
 
-    transform = transforms.Compose([T.BGR2RGB(),
-                                    T.Rescale(cfg.input_size),
-                                    T.RandomAugmentation(2),
-                                    T.Normalize(),
-                                    T.ToTensor()])
-
-    md = DentalDataset('F:/UNIVERCITY/sharifian/t1/datasets/train',
+    md = DentalDataset('F:/UNIVERCITY/sharifian/t1/datasets/tumor_dataset/splited/train',
                        transform)
 
     for sample in md:
         print(sample['img'].shape)
         print(sample['mask'].shape)
-        '''cv2.imshow('img', sample['img'])
-        cv2.imshow('mask', sample['mask'])
-        cv2.waitKey()'''
 
         break
