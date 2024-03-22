@@ -56,10 +56,10 @@ class DentalDataset(Dataset):
         sample = {'img': img, 'img_sail': img_sail, 'mask': mask}
         
 
-        print("Before transform:", sample)
+        #print("Before transform:", sample)
         if self.transform:
             sample = self.transform(sample)
-        print("After transform:", sample)
+        #print("After transform:", sample)
 
         
         img, img_sail, mask = sample['img'], sample['img_sail'], sample['mask']
