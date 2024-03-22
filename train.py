@@ -85,7 +85,7 @@ class TrainTestPipe:
             plt.legend()
     
             # Save the plot to the same file, overwriting the previous plot
-            plt.savefig('/content/drive/MyDrive/dataset_v1/plot/plot3.png')
+            plt.savefig('/content/drive/MyDrive/dataset_v1/plot/plot4.png')
             plt.close()  # Close the figure to free memory      
 
 
