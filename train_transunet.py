@@ -34,7 +34,7 @@ class TransUNetSeg:
         self.model.train()
 
         self.optimizer.zero_grad()
-        pred_mask = self.model(params['img'])
+        pred_mask = self.model(params['img'], params['img_sail'])
         loss = self.criterion(pred_mask, params['mask'])
         loss.backward()
         self.optimizer.step()
@@ -44,7 +44,7 @@ class TransUNetSeg:
     def test_step(self, **params):
         self.model.eval()
 
-        pred_mask = self.model(params['img'])
+        pred_mask = self.model(params['img'], params['img_sail'])
         loss = self.criterion(pred_mask, params['mask'])
 
         return loss.item(), pred_mask

@@ -14,7 +14,9 @@ def main_pipeline(parser):
 
     if parser.mode == 'train':
         ttp = TrainTestPipe(train_path=parser.train_path,
+                            train_sail_path=parser.train_sail_path,
                             test_path=parser.test_path,
+                            test_sail_path=parser.test_sail_path,
                             model_path=parser.model_path,
                             device=device)
 
@@ -33,7 +35,9 @@ if __name__ == '__main__':
     parser.add_argument('--model_path', required=True, type=str, default=None)
 
     parser.add_argument('--train_path', required='train' in sys.argv,  type=str, default=None)
+    parser.add_argument('--train_sail_path', required='train' in sys.argv,  type=str, default=None)
     parser.add_argument('--test_path', required='train' in sys.argv, type=str, default=None)
+    parser.add_argument('--test_sail_path', required='train' in sys.argv, type=str, default=None)
 
     parser.add_argument('--image_path', required='infer' in sys.argv, type=str, default=None)
     parser = parser.parse_args()

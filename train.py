@@ -14,16 +14,16 @@ from train_transunet import TransUNetSeg
 import matplotlib.pyplot as plt
 
 class TrainTestPipe:
-    def __init__(self, train_path, test_path, model_path, device):
+    def __init__(self, train_path, train_sail_path, test_path, test_sail_path, model_path, device):
         self.device = device
         self.model_path = model_path
 
-        self.train_loader = self.__load_dataset(train_path, train=True)
-        self.test_loader = self.__load_dataset(test_path)
+        self.train_loader = self.__load_dataset(train_path, train_sail_path, train=True)
+        self.test_loader = self.__load_dataset(test_path, test_sail_path)
 
         self.transunet = TransUNetSeg(self.device)
 
-    def __load_dataset(self, path, train=False):
+    def __load_dataset(self, path, sail_path, train=False):
         shuffle = False
         transform = False
 
@@ -31,7 +31,7 @@ class TrainTestPipe:
             shuffle = True
             transform = transforms.Compose([T.RandomAugmentation(2)])
 
-        set = DentalDataset(path, transform)
+        set = DentalDataset(path= path, transform= transform, sail_path= sail_path)
         loader = DataLoader(set, batch_size=cfg.batch_size, shuffle=shuffle)
 
         return loader
@@ -40,11 +40,12 @@ class TrainTestPipe:
         total_loss = 0
 
         for step, data in enumerate(loader):
-            img, mask = data['img'], data['mask']
+            img, img_sail, mask = data['img'], data['img_sail'], data['mask']
             img = img.to(self.device)
+            img_sail = img_sail.to(self.device)
             mask = mask.to(self.device)
 
-            loss, cls_pred = step_func(img=img, mask=mask)
+            loss, cls_pred = step_func(img=img, img_sail=img_sail, mask=mask)
 
             total_loss += loss
 
