@@ -55,7 +55,7 @@ class TrainTestPipe:
 
     def train(self):
         # Load pre-trained model weights before starting training
-        self.transunet.load_model(self.model_path)  # Ensure self.model_path points to the checkpoint file
+        #self.transunet.load_model(self.model_path)  # Ensure self.model_path points to the checkpoint file
         
         train_loss_plot = []
         test_loss_plot = []
