@@ -1,8 +1,9 @@
 from tqdm import tqdm
-import torch
+import torch 
+import torch.nn as nn
 from torchvision import transforms
 from torch.utils.data import DataLoader
-
+import os
 # Additional Scripts
 from utils import transforms as T
 from utils.dataset import DentalDataset
@@ -55,8 +56,19 @@ class TrainTestPipe:
 
     def train(self):
         # Load pre-trained model weights before starting training
-        #self.transunet.load_model(self.model_path)  # Ensure self.model_path points to the checkpoint file
-        
+        if os.path.exists(self.model_path):
+            self.transunet.load_model(self.model_path)  
+
+        # Freeze the weights of the earlier layers, if desired
+        for param in self.transunet.model.parameters():
+            param.requires_grad = True
+        # for param in self.transunet.model.fc.parameters():
+        #     param.requires_grad = True    
+
+        num_features = self.transunet.model.fc.in_features
+        self.transunet.model.fc = nn.Linear(num_features, cfg.transunet.class_num)
+
+
         train_loss_plot = []
         test_loss_plot = []
         
