@@ -65,8 +65,8 @@ class TrainTestPipe:
         # for param in self.transunet.model.fc.parameters():
         #     param.requires_grad = True    
 
-        num_features = self.transunet.model.fc.in_features
-        self.transunet.model.fc = nn.Linear(num_features, cfg.transunet.class_num)
+        # num_features = self.transunet.model.fc.in_features
+        # self.transunet.model.fc = nn.Linear(num_features, cfg.transunet.class_num)
 
 
         train_loss_plot = []
