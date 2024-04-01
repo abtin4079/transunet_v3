@@ -1,5 +1,5 @@
 import torch
-from torch.optim import SGD, Adam
+from torch.optim import SGD
 
 # Additional Scripts
 from utils.transunet import TransUNet
@@ -21,7 +21,7 @@ class TransUNetSeg:
 
         self.criterion = dice_loss
         self.optimizer = SGD(self.model.parameters(), lr=cfg.learning_rate,
-                             momentum=cfg.momentum, weight_decay=cfg.weight_decay)
+                              momentum=cfg.momentum, weight_decay=cfg.weight_decay)
         #self.optimizer = Adam(self.model.parameters(), lr= cfg.learning_rate, weight_decay=cfg.weight_decay)
 
     def load_model(self, path):

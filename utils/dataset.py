@@ -16,7 +16,7 @@ class DentalDataset(Dataset):
         self.transform = transform
 
         img_folder = os.path.join(path, 'img')
-        img_sail_folder = os.path.join(sail_path, 'img')
+        img_sail_folder = os.path.join(sail_path, 'grad_img')
         mask_folder = os.path.join(sail_path, 'mask')
 
         self.img_paths = []
@@ -26,7 +26,7 @@ class DentalDataset(Dataset):
             name = p.split('.')[0]
 
             self.img_paths.append(os.path.join(img_folder, name + '.png'))
-            self.img_sail_paths.append(os.path.join(img_sail_folder, name + '.npy'))
+            self.img_sail_paths.append(os.path.join(img_sail_folder, name + '.png'))
             self.mask_paths.append(os.path.join(mask_folder, name + '.png'))
 
     def __getitem__(self, idx):
