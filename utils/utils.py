@@ -79,3 +79,5 @@ class EpochCallback:
             if self.patience is not None and self.not_improved_epoch >= self.patience:
                 print("Training was stopped by callback!")
                 self.end_training = True
+
+        print('\n')

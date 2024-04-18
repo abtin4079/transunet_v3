@@ -5,7 +5,7 @@ from torch.optim import SGD
 from utils.transunet import TransUNet
 from utils.utils import dice_loss
 from config import cfg
-
+from utils.metrics import *
 
 class TransUNetSeg:
     def __init__(self, device):
@@ -37,15 +37,24 @@ class TransUNetSeg:
         self.optimizer.zero_grad()
         pred_mask = self.model(params['img'], params['img_sail'])
         loss = self.criterion(pred_mask, params['mask'])
+        IOU = intersection_over_union(pred_mask, params['mask'])
+        acc = accuracy(pred_mask, params['mask'])
+        F1 = f1_score(pred_mask, params['mask'])
+
         loss.backward()
+
         self.optimizer.step()
 
-        return loss.item(), pred_mask
+        metrics = [IOU , F1 , acc]
+
+        return loss.item(), pred_mask , metrics
 
     def test_step(self, **params):
         self.model.eval()
 
         pred_mask = self.model(params['img'], params['img_sail'])
         loss = self.criterion(pred_mask, params['mask'])
+        
+        a = 0
 
-        return loss.item(), pred_mask
+        return loss.item(), pred_mask , a

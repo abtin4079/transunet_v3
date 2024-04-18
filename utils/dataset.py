@@ -22,7 +22,7 @@ class DentalDataset(Dataset):
         self.img_paths = []
         self.img_sail_paths = []
         self.mask_paths = []
-        for p in os.listdir(img_folder):
+        for p in os.listdir(img_sail_folder):
             name = p.split('.')[0]
 
             self.img_paths.append(os.path.join(img_folder, name + '.png'))
@@ -37,7 +37,7 @@ class DentalDataset(Dataset):
         img_sail = self.img_sail_paths[idx]
         mask = self.mask_paths[idx]
 
-        img_sail = np.load(img_sail)
+        img_sail = cv2.imread(img_sail)
         img_sail = cv2.cvtColor(img_sail, cv2.COLOR_BGR2RGB)
         img_sail = cv2.resize(img_sail, (self.output_size, self.output_size))
 
