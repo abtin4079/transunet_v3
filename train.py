@@ -114,7 +114,7 @@ class TrainTestPipe:
 
 
             plt.figure()  # Create a new figure to avoid overlap
-            plt.plot(train_acc_plot, label='accuracy')
+            plt.plot(train_acc_plot, label='Accuracy')
             plt.xlabel('Epochs')
             plt.ylabel('Loss')
             plt.legend()
