@@ -25,9 +25,9 @@ class DentalDataset(Dataset):
         for p in os.listdir(img_sail_folder):
             name = p.split('.')[0]
 
-            self.img_paths.append(os.path.join(img_folder, name + '.jpg'))
+            self.img_paths.append(os.path.join(img_folder, name + '.png'))
             self.img_sail_paths.append(os.path.join(img_sail_folder, name + '.png'))
-            self.mask_paths.append(os.path.join(mask_folder, name + '.jpg'))
+            self.mask_paths.append(os.path.join(mask_folder, name + '.png'))
 
     def __getitem__(self, idx):
         if torch.is_tensor(idx):
