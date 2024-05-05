@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 from einops import rearrange
 
-from utils.vit import ViT
+from vit import ViT
 
 
 class EncoderBottleneck(nn.Module):
@@ -159,6 +159,10 @@ class TransUNet(nn.Module):
         self.vit = ViT(self.vit_img_dim, out_channels * 8, out_channels * 8,
                        head_num, mlp_dim, block_num, patch_dim=1, classification=False)
 
+        self.vit_skipcon = ViT(int(self.vit_img_dim * 8), out_channels * 2, out_channels * 2,
+                       head_num, mlp_dim, block_num, patch_dim=1, classification=False)
+
+
         self.conv2 = nn.Conv2d(out_channels * 8, 512, kernel_size=3, stride=1, padding=1)
         self.norm2 = nn.BatchNorm2d(512)
         self.relu = nn.ReLU(inplace=True)
@@ -176,8 +180,15 @@ class TransUNet(nn.Module):
         # print(f'x1 shape is :{x1.shape}')
         # print(f'y1 shape is : {y1.shape}')
         # print(f'z1 shape is :{z1.shape}')
+
+        # PASS THE FIRST SKIP CONNECTION TROUGH THE ViT
+        print(f'z1 shape is :{z1.shape}')
+        z1 = self.vit_skipcon(z1)
+        z1 = rearrange(z1, "b (x y) c -> b c x y", x=self.vit_img_dim * 8, y=self.vit_img_dim * 8)
+
+        print(f'z1 shape is :{z1.shape}')
         z1 = self.conv11(z1)
-        # print(f'z1 shape is :{z1.shape}')
+        print(f'z1 shape is :{z1.shape}')
 
         z2 = torch.cat([x2, y2], dim=1)
         # print(f'x2 shape is :{x2.shape}')
@@ -200,13 +211,13 @@ class TransUNet(nn.Module):
         # print(f'y shape is : {y.shape}')
         # print(f'z shape is :{z.shape}')
         z = self.conv14(z)
-        # print(f'z shape is :{z.shape}')
+        print(f'z shape is :{z.shape}')
         
         # pass the z to the ViT 
         z = self.vit(z)
 
         z = rearrange(z, "b (x y) c -> b c x y", x=self.vit_img_dim, y=self.vit_img_dim)
-        # print(f'z shape is :{z.shape}')
+        print(f'z shape is :{z.shape}')
 
         z = self.conv2(z)
         z = self.norm2(z)
