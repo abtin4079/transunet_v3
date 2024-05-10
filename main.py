@@ -5,6 +5,7 @@ import argparse
 # Additional Scripts
 from train import TrainTestPipe
 from inference import SegInference
+import torch.nn as nn
 from torch.nn.parallel import DataParallel
 
 
@@ -29,6 +30,9 @@ def main_pipeline(parser):
                             test_sail_path=parser.test_sail_path,
                             model_path=parser.model_path,
                             device=device)
+        
+        ttp.setup_model()
+
         if num_gpus > 1:
             # Wrap the model with DataParallel
             ttp.model = DataParallel(ttp.model)
@@ -42,6 +46,7 @@ def main_pipeline(parser):
 
         if num_gpus > 1:
             # Wrap the model with DataParallel
+            inf.setup_model()
             inf.model = DataParallel(inf.model)
 
         _ = inf.infer(parser.image_path)
