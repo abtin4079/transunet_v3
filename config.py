@@ -1,7 +1,7 @@
 from easydict import EasyDict
 
 cfg = EasyDict()
-cfg.batch_size = 16
+cfg.batch_size = 10
 cfg.epoch = 100
 cfg.learning_rate = 1e-2
 cfg.momentum = 0.9
