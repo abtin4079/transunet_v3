@@ -31,10 +31,11 @@ def main_pipeline(parser):
                             model_path=parser.model_path,
                             device=device)
         
-        ttp.setup_model()
+        
 
         if num_gpus > 1:
             # Wrap the model with DataParallel
+            ttp.setup_model()
             ttp.model = DataParallel(ttp.model)
 
 
