@@ -5,12 +5,22 @@ import argparse
 # Additional Scripts
 from train import TrainTestPipe
 from inference import SegInference
+from torch.nn.parallel import DataParallel
 
 
 def main_pipeline(parser):
-    device = 'cpu:0'
     if torch.cuda.is_available():
-        device = 'cuda:0'
+        num_gpus = torch.cuda.device_count()
+        print(f"Found {num_gpus} GPU(s) available.")
+        if num_gpus > 1:
+            device = 'cuda'
+            print("Multiple GPUs available. Using", device)
+        else:
+            device = 'cuda:0'  # or 'cuda:0' if you want to use the first GPU
+            print("Single GPU available. Using", device)
+    else:
+        device = 'cpu'
+        print("No GPU available. Using CPU.")
 
     if parser.mode == 'train':
         ttp = TrainTestPipe(train_path=parser.train_path,
@@ -19,12 +29,20 @@ def main_pipeline(parser):
                             test_sail_path=parser.test_sail_path,
                             model_path=parser.model_path,
                             device=device)
+        if num_gpus > 1:
+            # Wrap the model with DataParallel
+            ttp.model = DataParallel(ttp.model)
+
 
         ttp.train()
 
     elif parser.mode == 'inference':
         inf = SegInference(model_path=parser.model_path,
                            device=device)
+
+        if num_gpus > 1:
+            # Wrap the model with DataParallel
+            inf.model = DataParallel(inf.model)
 
         _ = inf.infer(parser.image_path)
 
