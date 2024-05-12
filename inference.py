@@ -39,15 +39,21 @@ class SegInference:
         for name, pred_mask in preds.items():
             cv2.imwrite(f'{folder_path}/{name}', pred_mask)
 
-    def infer(self, path, merged=True, save=True):
+    def infer(self, path, grad_path, merged=True, save=True):
         path = [path] if isinstance(path, str) else path
+        grad_path = [grad_path] if isinstance(grad_path, str) else grad_path
 
         preds = {}
+
+        for p_grad in grad_path:
+            file_name = p_grad.split('/')[-1]
+            img_grad, img_torch_grad = self.read_and_preprocess(p_grad)
+
         for p in path:
             file_name = p.split('/')[-1]
             img, img_torch = self.read_and_preprocess(p)
             with torch.no_grad():
-                pred_mask = self.transunet.model(img_torch)
+                pred_mask = self.transunet.model(img_torch, img_torch_grad)
                 pred_mask = torch.sigmoid(pred_mask)
                 pred_mask = pred_mask.detach().cpu().numpy().transpose((0, 2, 3, 1))
 

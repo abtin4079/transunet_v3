@@ -33,10 +33,10 @@ def main_pipeline(parser):
         
         
 
-        if num_gpus > 1:
-            # Wrap the model with DataParallel
-            ttp.setup_model()
-            ttp.model = DataParallel(ttp.model)
+        # if num_gpus > 1:
+            # # Wrap the model with DataParallel
+            # ttp.setup_model()
+            # ttp.model = DataParallel(ttp.model)
 
 
         ttp.train()
@@ -45,12 +45,12 @@ def main_pipeline(parser):
         inf = SegInference(model_path=parser.model_path,
                            device=device)
 
-        if num_gpus > 1:
-            # Wrap the model with DataParallel
-            inf.setup_model()
-            inf.model = DataParallel(inf.model)
+        # if num_gpus > 1:
+        #     # Wrap the model with DataParallel
+        #     inf.setup_model()
+        #     inf.model = DataParallel(inf.model)
 
-        _ = inf.infer(parser.image_path)
+        _ = inf.infer(parser.image_path, parser.image_grad_path)
 
 
 if __name__ == '__main__':
@@ -64,6 +64,7 @@ if __name__ == '__main__':
     parser.add_argument('--test_sail_path', required='train' in sys.argv, type=str, default=None)
 
     parser.add_argument('--image_path', required='infer' in sys.argv, type=str, default=None)
+    parser.add_argument('--image_grad_path', required='infer' in sys.argv, type=str, default=None)
     parser = parser.parse_args()
 
     main_pipeline(parser)
