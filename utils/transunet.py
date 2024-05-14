@@ -204,7 +204,10 @@ class TransUNet(nn.Module):
         #print(f'z2 shape is :{z2.shape}')
         z2 = self.conv12(z2)
         #print(f'z2 shape is :{z2.shape}')
-
+        z2 = self.vit_skipcon_2(z2)
+        #print(f'z2 shape is :{z2.shape}')
+        z2 = rearrange(z2, "b (x y) c -> b c x y", x=self.vit_img_dim *4, y=self.vit_img_dim *4)
+        #print(f'z2 shape is :{z2.shape}')
 
         z3 = torch.cat([x3, y3], dim=1)
         # print(f'x3 shape is :{x3.shape}')
@@ -215,9 +218,9 @@ class TransUNet(nn.Module):
         #print(f'z3 shape is :{z3.shape}')
         z3 = self.conv13(z3)
         #print(f'z3 shape is :{z3.shape}')
-        z3 = self.vit_skipcon(z3)
+        # z3 = self.vit_skipcon(z3)
         
-        z3 = rearrange(z3, "b (x y) c -> b c x y", x=self.vit_img_dim * 2, y=self.vit_img_dim * 2)
+        # z3 = rearrange(z3, "b (x y) c -> b c x y", x=self.vit_img_dim * 2, y=self.vit_img_dim * 2)
         #print(f'z3 shape is :{z3.shape}')
 
         # print(f'z3 shape is :{z3.shape}')
