@@ -10,7 +10,7 @@ cfg.patience = 25
 cfg.inference_threshold = 0.75
 
 cfg.transunet = EasyDict()
-cfg.transunet.img_dim = 224
+cfg.transunet.img_dim = 128
 cfg.transunet.in_channels = 3
 cfg.transunet.out_channels = 128
 cfg.transunet.head_num = 4
