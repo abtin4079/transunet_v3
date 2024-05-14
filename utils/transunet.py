@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 from einops import rearrange
 
-from utils.vit import ViT
+from vit import ViT
 
 
 class EncoderBottleneck(nn.Module):
@@ -191,10 +191,10 @@ class TransUNet(nn.Module):
 
         # PASS THE FIRST SKIP CONNECTION TROUGH THE ViT
         # print(f'z1 shape is :{z1.shape}')
-        # z1 = self.vit_skipcon(z1)
-        # z1 = rearrange(z1, "b (x y) c -> b c x y", x=self.vit_img_dim * 8, y=self.vit_img_dim * 8)
 
         print(f'z1 shape is :{z1.shape}')
+        # z1 = self.vit_skipcon_1(z1)
+        # z1 = rearrange(z1, "b (x y) c -> b c x y", x=self.vit_img_dim , y=self.vit_img_dim )
         z1 = self.conv11(z1)
         print(f'z1 shape is :{z1.shape}')
 
