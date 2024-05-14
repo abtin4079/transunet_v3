@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 from einops import rearrange
 
-from vit import ViT
+from utils.vit import ViT
 
 
 class EncoderBottleneck(nn.Module):
@@ -192,18 +192,18 @@ class TransUNet(nn.Module):
         # PASS THE FIRST SKIP CONNECTION TROUGH THE ViT
         # print(f'z1 shape is :{z1.shape}')
 
-        print(f'z1 shape is :{z1.shape}')
+        #print(f'z1 shape is :{z1.shape}')
         # z1 = self.vit_skipcon_1(z1)
         # z1 = rearrange(z1, "b (x y) c -> b c x y", x=self.vit_img_dim , y=self.vit_img_dim )
         z1 = self.conv11(z1)
-        print(f'z1 shape is :{z1.shape}')
+        #print(f'z1 shape is :{z1.shape}')
 
         z2 = torch.cat([x2, y2], dim=1)
         # print(f'x2 shape is :{x2.shape}')
         # print(f'y2 shape is : {y2.shape}')
-        # print(f'z2 shape is :{z2.shape}')
+        #print(f'z2 shape is :{z2.shape}')
         z2 = self.conv12(z2)
-        # print(f'z2 shape is :{z2.shape}')
+        #print(f'z2 shape is :{z2.shape}')
 
 
         z3 = torch.cat([x3, y3], dim=1)
@@ -212,13 +212,13 @@ class TransUNet(nn.Module):
         # print(f'z3 shape is :{z3.shape}')
 
         #initialize the ViT on teh lowest skip connection 
-        print(f'z3 shape is :{z3.shape}')
+        #print(f'z3 shape is :{z3.shape}')
         z3 = self.conv13(z3)
-        print(f'z3 shape is :{z3.shape}')
+        #print(f'z3 shape is :{z3.shape}')
         z3 = self.vit_skipcon(z3)
         
         z3 = rearrange(z3, "b (x y) c -> b c x y", x=self.vit_img_dim * 2, y=self.vit_img_dim * 2)
-        print(f'z3 shape is :{z3.shape}')
+        #print(f'z3 shape is :{z3.shape}')
 
         # print(f'z3 shape is :{z3.shape}')
 
@@ -228,13 +228,13 @@ class TransUNet(nn.Module):
         # print(f'y shape is : {y.shape}')
         # print(f'z shape is :{z.shape}')
         z = self.conv14(z)
-        print(f'z shape is :{z.shape}')
+       # print(f'z shape is :{z.shape}')
         
         # pass the z to the ViT 
         z = self.vit(z)
 
         z = rearrange(z, "b (x y) c -> b c x y", x=self.vit_img_dim, y=self.vit_img_dim)
-        print(f'z shape is :{z.shape}')
+        #print(f'z shape is :{z.shape}')
 
         z = self.conv2(z)
         z = self.norm2(z)
@@ -243,7 +243,7 @@ class TransUNet(nn.Module):
 
 
         z = self.decoder(z, z1, z2, z3)
-        print(f'z shape is :{z.shape}')
+        #print(f'z shape is :{z.shape}')
         return z
 
 
