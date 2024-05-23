@@ -17,8 +17,8 @@ class SegInference:
         self.transunet = TransUNetSeg(device)
         self.transunet.load_model(model_path)
 
-        if not os.path.exists('./results'):
-            os.mkdir('./results')
+        if not os.path.exists('/content/drive/MyDrive/kvasir/train/treshold_img'):
+            os.mkdir('/content/drive/MyDrive/kvasir/train/treshold_img')
 
     def read_and_preprocess(self, p):
         img = cv2.imread(p)
@@ -33,7 +33,7 @@ class SegInference:
         return img, img_torch
 
     def save_preds(self, preds):
-        folder_path = './results/' + str(datetime.datetime.utcnow()).replace(' ', '_')
+        folder_path = '/content/drive/MyDrive/kvasir/train/treshold_img' + str(datetime.datetime.utcnow()).replace(' ', '_')
 
         os.mkdir(folder_path)
         for name, pred_mask in preds.items():
@@ -59,11 +59,11 @@ class SegInference:
 
             orig_h, orig_w = img.shape[:2]
             pred_mask = cv2.resize(pred_mask[0, ...], (orig_w, orig_h))
-            pred_mask = thresh_func(pred_mask, thresh=cfg.inference_threshold)
+            #pred_mask = thresh_func(pred_mask, thresh=cfg.inference_threshold)
             pred_mask *= 255
 
-            if merged:
-                pred_mask = cv2.bitwise_and(img, img, mask=pred_mask.astype('uint8'))
+            # if merged:
+            #     pred_mask = cv2.bitwise_and(img, img, mask=pred_mask.astype('uint8'))
 
             preds[file_name] = pred_mask
 
