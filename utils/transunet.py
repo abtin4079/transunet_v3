@@ -159,17 +159,17 @@ class TransUNet(nn.Module):
         self.vit = ViT(self.vit_img_dim, out_channels * 8, out_channels * 8,
                        head_num, mlp_dim, block_num, patch_dim=1, classification=False)
 
-        #Layers three for skip connection
-        self.vit_skipcon = ViT(self.vit_img_dim * 2, out_channels * 4,out_channels * 4,
-                       head_num, mlp_dim, block_num, patch_dim=1, classification=False)
+        # #Layers three for skip connection
+        # self.vit_skipcon = ViT(self.vit_img_dim * 2, out_channels * 4,out_channels * 4,
+        #                head_num, mlp_dim, block_num, patch_dim=1, classification=False)
 
-        #Layers two for skip connection
-        self.vit_skipcon_2 = ViT(self.vit_img_dim * 4, out_channels * 2,out_channels * 2,
-                       head_num, mlp_dim, block_num, patch_dim=1, classification=False)
+        # #Layers two for skip connection
+        # self.vit_skipcon_2 = ViT(self.vit_img_dim * 4, out_channels * 2,out_channels * 2,
+        #                head_num, mlp_dim, block_num, patch_dim=1, classification=False)
 
-        #Layers one for skip connection
-        self.vit_skipcon_1 = ViT(self.vit_img_dim * 8, out_channels, out_channels,
-                       head_num, mlp_dim, block_num, patch_dim=1, classification=False)
+        # #Layers one for skip connection
+        # self.vit_skipcon_1 = ViT(self.vit_img_dim * 8, out_channels, out_channels,
+        #                head_num, mlp_dim, block_num, patch_dim=1, classification=False)
 
         self.conv2 = nn.Conv2d(out_channels * 8, 512, kernel_size=3, stride=1, padding=1)
         self.norm2 = nn.BatchNorm2d(512)
@@ -204,9 +204,9 @@ class TransUNet(nn.Module):
         #print(f'z2 shape is :{z2.shape}')
         z2 = self.conv12(z2)
         #print(f'z2 shape is :{z2.shape}')
-        z2 = self.vit_skipcon_2(z2)
+        #z2 = self.vit_skipcon_2(z2)
         #print(f'z2 shape is :{z2.shape}')
-        z2 = rearrange(z2, "b (x y) c -> b c x y", x=self.vit_img_dim *4, y=self.vit_img_dim *4)
+        #z2 = rearrange(z2, "b (x y) c -> b c x y", x=self.vit_img_dim *4, y=self.vit_img_dim *4)
         #print(f'z2 shape is :{z2.shape}')
 
         z3 = torch.cat([x3, y3], dim=1)
@@ -226,15 +226,24 @@ class TransUNet(nn.Module):
         # print(f'z3 shape is :{z3.shape}')
 
 
+        
+
+
+        x = self.conv14(x)
+        y = self.conv14(y)
+
+        x = self.vit(x)
+        y = self.vit(y)
+
         z = torch.cat((x, y), dim=1)
         # print(f'x shape is :{x.shape}')
         # print(f'y shape is : {y.shape}')
         # print(f'z shape is :{z.shape}')
-        z = self.conv14(z)
+        #z = self.conv14(z)
        # print(f'z shape is :{z.shape}')
         
         # pass the z to the ViT 
-        z = self.vit(z)
+        #z = self.vit(z)
 
         z = rearrange(z, "b (x y) c -> b c x y", x=self.vit_img_dim, y=self.vit_img_dim)
         #print(f'z shape is :{z.shape}')
