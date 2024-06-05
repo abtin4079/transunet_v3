@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 from einops import rearrange
 
-from utils.vit import ViT
+from vit import ViT
 
 
 class EncoderBottleneck(nn.Module):
@@ -152,7 +152,7 @@ class TransUNet(nn.Module):
         self.conv11 = nn.Conv2d(in_channels=out_channels * 2, out_channels= out_channels, kernel_size=1)
         self.conv12 = nn.Conv2d(in_channels=out_channels * 4, out_channels= out_channels * 2, kernel_size=1)
         self.conv13 = nn.Conv2d(in_channels=out_channels * 8, out_channels= out_channels * 4, kernel_size=1)
-        self.conv14 = nn.Conv2d(in_channels=out_channels * 16, out_channels=out_channels * 8, kernel_size=1)
+        self.conv14 = nn.Conv2d(in_channels=out_channels * 8, out_channels=out_channels * 8, kernel_size=1)
 
         # initialize the ViT
         self.vit_img_dim = img_dim // patch_dim
@@ -233,19 +233,22 @@ class TransUNet(nn.Module):
         y = self.conv14(y)
 
         x = self.vit(x)
+        x = rearrange(x, "b (x y) c -> b c x y", x=self.vit_img_dim, y=self.vit_img_dim)
         y = self.vit(y)
-
+        y = rearrange(y, "b (x y) c -> b c x y", x=self.vit_img_dim, y=self.vit_img_dim)
+        print(f'x shape is :{x.shape}')
+        print(f'y shape is : {y.shape}')
         z = torch.cat((x, y), dim=1)
-        # print(f'x shape is :{x.shape}')
-        # print(f'y shape is : {y.shape}')
-        # print(f'z shape is :{z.shape}')
+        conv_reduce_channels = nn.Conv2d(2048, 1024, kernel_size=1)
+        z = conv_reduce_channels(z)
+        print(f'z shape is :{z.shape}')
         #z = self.conv14(z)
        # print(f'z shape is :{z.shape}')
         
         # pass the z to the ViT 
         #z = self.vit(z)
 
-        z = rearrange(z, "b (x y) c -> b c x y", x=self.vit_img_dim, y=self.vit_img_dim)
+        #z = rearrange(z, "b (x y) c -> b c x y", x=self.vit_img_dim, y=self.vit_img_dim)
         #print(f'z shape is :{z.shape}')
 
         z = self.conv2(z)
