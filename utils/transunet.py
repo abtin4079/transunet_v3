@@ -238,12 +238,12 @@ class TransUNet(nn.Module):
         y = rearrange(y, "b (x y) c -> b c x y", x=self.vit_img_dim, y=self.vit_img_dim)
 
 
-        print(f'x shape is :{x.shape}')
-        print(f'y shape is : {y.shape}')
+        #print(f'x shape is :{x.shape}')
+        #print(f'y shape is : {y.shape}')
         z = torch.cat((x, y), dim=1)
         
         z = self.conv_reduce_channels(z)
-        print(f'z shape is :{z.shape}')
+        #print(f'z shape is :{z.shape}')
         #z = self.conv14(z)
        # print(f'z shape is :{z.shape}')
         
