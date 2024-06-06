@@ -15,6 +15,6 @@ cfg.transunet.in_channels = 3
 cfg.transunet.out_channels = 128
 cfg.transunet.head_num = 4
 cfg.transunet.mlp_dim = 256
-cfg.transunet.block_num = 6
+cfg.transunet.block_num = 10
 cfg.transunet.patch_dim = 16
 cfg.transunet.class_num = 1
