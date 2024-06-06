@@ -20,9 +20,9 @@ class TransUNetSeg:
                                class_num=cfg.transunet.class_num).to(self.device)
 
         self.criterion = dice_loss
-        self.optimizer = SGD(self.model.parameters(), lr=cfg.learning_rate,
-                             momentum=cfg.momentum, weight_decay=cfg.weight_decay)
-        # self.optimizer = Adam(self.model.parameters(), lr= cfg.learning_rate)
+        # self.optimizer = SGD(self.model.parameters(), lr=cfg.learning_rate,
+        #                      momentum=cfg.momentum, weight_decay=cfg.weight_decay)
+        self.optimizer = Adam(self.model.parameters(), lr= cfg.learning_rate)
 
     def load_model(self, path):
         ckpt = torch.load(path)
