@@ -153,7 +153,7 @@ class TransUNet(nn.Module):
         self.conv12 = nn.Conv2d(in_channels=out_channels * 4, out_channels= out_channels * 2, kernel_size=1)
         self.conv13 = nn.Conv2d(in_channels=out_channels * 8, out_channels= out_channels * 4, kernel_size=1)
         self.conv14 = nn.Conv2d(in_channels=out_channels * 8, out_channels=out_channels * 8, kernel_size=1)
-
+        self.conv_reduce_channels = nn.Conv2d(in_channels=out_channels * 16, out_channels=out_channels * 8, kernel_size=1)
         # initialize the ViT
         self.vit_img_dim = img_dim // patch_dim
         self.vit = ViT(self.vit_img_dim, out_channels * 8, out_channels * 8,
@@ -236,11 +236,13 @@ class TransUNet(nn.Module):
         x = rearrange(x, "b (x y) c -> b c x y", x=self.vit_img_dim, y=self.vit_img_dim)
         y = self.vit(y)
         y = rearrange(y, "b (x y) c -> b c x y", x=self.vit_img_dim, y=self.vit_img_dim)
+
+
         print(f'x shape is :{x.shape}')
         print(f'y shape is : {y.shape}')
         z = torch.cat((x, y), dim=1)
-        conv_reduce_channels = nn.Conv2d(2048, 1024, kernel_size=1)
-        z = conv_reduce_channels(z)
+        
+        z = self.conv_reduce_channels(z)
         print(f'z shape is :{z.shape}')
         #z = self.conv14(z)
        # print(f'z shape is :{z.shape}')
